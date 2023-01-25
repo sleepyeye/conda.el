@@ -31,7 +31,7 @@
   :group 'python)
 
 (defcustom conda-home-candidates
-  '("~/.anaconda3" "~/miniconda3" "~/mambaforge" "~/anaconda" "~/miniconda" "~/mamba" "~/.conda")
+  '("~/micromamba" "~/.anaconda3" "~/miniconda3" "~/mambaforge" "~/anaconda" "~/miniconda" "~/mamba" "~/.conda")
   "Location of possible candidates for conda environment directory."
   :type '(list string)
   :group 'conda)
@@ -130,8 +130,11 @@ Cached for the lifetime of the process."
             (f-join conda-anaconda-home conda-env-executables-dir "conda"))
            ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
             (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
+           ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "micromamba"))
+            (f-join conda-anaconda-home conda-env-executables-dir "micromamba"))
            ((executable-find "conda"))
            ((executable-find "mamba"))
+           ((executable-find "micromamba"))
            (t (error
                "There doesn't appear to be a conda or mamba executable on your exec path.  A common
  cause of problems like this is GUI Emacs not having environment variables set up like the
@@ -194,7 +197,7 @@ Set for the lifetime of the process.")
   "Return current Conda configuration.  Cached for the lifetime of the process."
   (if (not (eq conda--config nil))
       conda--config
-    (let ((cfg (conda--call-json "config" "--show" "--json")))
+    (let ((cfg (conda--call-json "config" "--json")))
       (setq conda--config cfg))))
 
 ;; (conda--get-config)
